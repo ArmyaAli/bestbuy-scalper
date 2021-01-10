@@ -1,10 +1,12 @@
+import { Console } from "console";
 import fs from "fs";
 import puppeteer from "puppeteer";
 //# 1 read the links file using the fs
 
 const FILE = "links.txt"
 let YOINKED = false;
-const navigateToPages = async (links: string[]) => {
+
+const yoink = async (links: string[]) => {
     const BUTTON_SELECTOR = "button.addToCartButton";
     const DISABLED_BUTTON_SELECTOR = "button[disabled].addToCartButton";
 
@@ -16,40 +18,45 @@ const navigateToPages = async (links: string[]) => {
             console.log(`loading page: ${link}`);
             await page.goto(link);
         }
-
+        // GRAB ALL OUR OPEN PAGES
         const pages = await browser.pages();
         let FOUUND_PAGE: puppeteer.Page | null = null;
+        let index = 0;
         while (!YOINKED) {
             for (const page of pages) {
+                
+                await page.setDefaultNavigationTimeout(0);
                 const button = await page.$(BUTTON_SELECTOR);
-                //console.log(button)
-                if (button) {
-                    const checkDisabled = await button.evaluate((button) => button.getAttribute('disabled'));
-                    console.log(checkDisabled)
-                    if (checkDisabled != null) {
-                        YOINKED = true;
-                        FOUUND_PAGE = page;
-                    }
+                const disabledButton = await page.$(DISABLED_BUTTON_SELECTOR);
+                if (button && !disabledButton) {
+                    YOINKED = true;
+                    FOUUND_PAGE = page;
+                    break;
                 }
+                await page.waitForTimeout(3000);
+                await page.reload({ waitUntil: ["networkidle2"] });
+                console.log(`I am on iteration ${index++}`);
             }
         }
 
         if (YOINKED && FOUUND_PAGE) {
             const button = await FOUUND_PAGE.$(BUTTON_SELECTOR);
-            if (button)
-                button.click();
+            if (button) 
+                await button.click();
+
+            console.log(`yoinked ${button}`);
         }
         //const button = await page.evaluate((button) => button.click());
         await browser.close();
     } catch (error) {
-        console.error(`Error occured in navigateToPages Function: ${error}`);
+        console.error(`Error occured in yoink Function: ${error}`);
     }
 }
 
 const BoostrapProcess = (callback: (buffer: string) => string[]) => {
     fs.readFile(FILE, 'utf8', (error, data) => {
         if (error) return console.log(error);
-        navigateToPages(callback(data));
+        yoink(callback(data));
     });
 }
 
