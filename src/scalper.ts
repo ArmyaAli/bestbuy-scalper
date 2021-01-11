@@ -10,7 +10,7 @@ const yoink = async (links: string[]) => {
     const DISABLED_BUTTON_SELECTOR = "button[disabled].addToCartButton";
     const TITLE_SELECTOR = "h1.productName_19xJx";
     try {
-        const browser = await puppeteer.launch({headless: false});
+        const browser = await puppeteer.launch();
         // go to each link
         for (const link of links) {
             const page = await browser.newPage();
