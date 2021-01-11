@@ -1,4 +1,4 @@
-import mailOptions, { transporter } from './emailConfig';
+import mailOptions, { transporter } from './config/emailConfig';
 
 const sendEmail = async (messageToSend?: string) => {
     try {
