@@ -1,21 +1,21 @@
 import { config } from 'dotenv';
 import { createTransport } from 'nodemailer';
-config();
 
+config();
 
 export const transporter = createTransport({
     service: 'gmail',
     auth: {
-        user: '',
-        pass: ''
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
     }
 });
 
 const mailOptions = {
-    from: 'ali.umar.work@gmail.com',
-    to: 'ali.umar.work@gmail.com',
+    from: process.env.EMAIL_USERNAME,
+    to: process.env.PERSONAL_EMAIL_ADDRESS,
     subject: 'Yoinked card',
-    text: 'Helloworld'
+    text: ''
 };
 
 export default mailOptions;
