@@ -6,6 +6,6 @@ This is a browser automation script using the tool called Puppeteer to automate 
 ## How to use
 1. Clone repo
 2. npm i 
-3. npm run dev (run the dev script that's setup)
-4. Now in the root folder, you should create a file called links.txt and on everyline enter the link of the bestbuy item you want to watch.
-5. Run the script and enjoy!
+3. Now in the root folder, you should create a file called links.txt and on everyline enter the link of the bestbuy item you want to watch.
+4. npm run dev (run the dev script that's setup)
+
